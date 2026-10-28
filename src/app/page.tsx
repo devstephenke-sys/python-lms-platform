@@ -7,7 +7,9 @@ import ModuleCard from '@/components/ModuleCard';
 import ProjectCard from '@/components/ProjectCard';
 import Pagination from '@/components/Pagination';
 import Auth from '@/components/Auth';
+import InstructorProfile from '@/components/InstructorProfile';
 import { courseModules, projects } from '@/data/courseData';
+import { instructors } from '@/data/instructorData';
 import { Project } from '@/types';
 
 const ITEMS_PER_PAGE = 6;
@@ -146,6 +148,24 @@ export default function Home() {
                   </p>
                 </div>
               </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Instructor Section */}
+        <section id="instructor" className="py-20 bg-[var(--card-bg)]">
+          <div className="container mx-auto px-4">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl md:text-4xl font-bold mb-4">Meet Your Instructor</h2>
+              <p className="text-lg text-[var(--foreground)]/70 max-w-2xl mx-auto">
+                Learn from industry experts with real-world experience
+              </p>
+            </div>
+
+            <div className="max-w-4xl mx-auto">
+              {instructors.map((instructor) => (
+                <InstructorProfile key={instructor.id} instructor={instructor} />
+              ))}
             </div>
           </div>
         </section>

@@ -34,6 +34,9 @@ export default function Header({ user, onLoginClick, onLogout }: HeaderProps) {
             <a href="#projects" className="text-sm font-medium hover:text-[var(--primary)] transition-colors">
               Projects
             </a>
+            <a href="#instructor" className="text-sm font-medium hover:text-[var(--primary)] transition-colors">
+              Instructor
+            </a>
             <a href="#about" className="text-sm font-medium hover:text-[var(--primary)] transition-colors">
               About
             </a>
@@ -89,6 +92,9 @@ export default function Header({ user, onLoginClick, onLogout }: HeaderProps) {
             </a>
             <a href="#projects" className="block py-2 text-sm font-medium hover:text-[var(--primary)] transition-colors">
               Projects
+            </a>
+            <a href="#instructor" className="block py-2 text-sm font-medium hover:text-[var(--primary)] transition-colors">
+              Instructor
             </a>
             <a href="#about" className="block py-2 text-sm font-medium hover:text-[var(--primary)] transition-colors">
               About

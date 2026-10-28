@@ -17,6 +17,7 @@ export interface Topic {
   code: string;
   order: number;
   completed?: boolean;
+  videoUrl?: string;
 }
 
 export interface Project {
@@ -50,4 +51,18 @@ export interface UserProgress {
   completedProjects: string[];
   quizScores: Record<string, number>;
   currentModule: string;
+}
+
+export interface Instructor {
+  id: string;
+  name: string;
+  title: string;
+  bio: string;
+  avatar: string;
+  credentials: string[];
+  socialLinks: {
+    linkedin?: string;
+    twitter?: string;
+    github?: string;
+  };
 }

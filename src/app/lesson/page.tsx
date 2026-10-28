@@ -4,7 +4,9 @@ import { useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Header from '@/components/Header';
 import CodeEditor from '@/components/CodeEditor';
+import QuizComponent from '@/components/Quiz';
 import { courseModules } from '@/data/courseData';
+import { quizData } from '@/data/quizData';
 import { Topic } from '@/types';
 import { ChevronLeft, ChevronRight, CheckCircle, Circle, BookOpen, Lightbulb, Globe } from 'lucide-react';
 
@@ -13,14 +15,16 @@ export default function LessonPage() {
   const router = useRouter();
   const [completedTopics, setCompletedTopics] = useState<Set<string>>(new Set());
   const [currentTopicIndex, setCurrentTopicIndex] = useState(0);
+  const [showQuiz, setShowQuiz] = useState(false);
 
   const module = courseModules.find((m) => m.id === params.moduleId);
   const currentTopic = module?.topics[currentTopicIndex];
+  const topicQuiz = quizData.find((q) => q.topicId === currentTopic?.id);
 
   if (!module || !currentTopic) {
     return (
       <div className="min-h-screen flex flex-col">
-        <Header />
+        <Header user={null} onLoginClick={() => {}} onLogout={() => {}} />
         <main className="flex-1 flex items-center justify-center">
           <div className="text-center">
             <h1 className="text-2xl font-bold mb-4">Lesson not found</h1>
@@ -195,6 +199,28 @@ export default function LessonPage() {
                 <h2 className="text-lg font-semibold mb-4">Interactive Code</h2>
                 <CodeEditor code={currentTopic.code} readOnly={false} height="400px" />
               </div>
+
+              {/* Quiz Section */}
+              {topicQuiz && (
+                <div>
+                  <h2 className="text-lg font-semibold mb-4">Test Your Knowledge</h2>
+                  {!showQuiz ? (
+                    <button
+                      onClick={() => setShowQuiz(true)}
+                      className="w-full py-3 rounded-lg border-2 border-dashed border-[var(--primary)] text-[var(--primary)] font-medium hover:bg-[var(--primary)]/10 transition-colors"
+                    >
+                      Start Quiz ({topicQuiz.questions.length} questions)
+                    </button>
+                  ) : (
+                    <QuizComponent
+                      quiz={topicQuiz}
+                      onComplete={(score, total) => {
+                        console.log(`Quiz completed: ${score}/${total}`);
+                      }}
+                    />
+                  )}
+                </div>
+              )}
 
               {/* Navigation */}
               <div className="flex items-center justify-between pt-8 border-t border-[var(--border)]">

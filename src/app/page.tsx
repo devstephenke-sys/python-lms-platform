@@ -1,69 +1,164 @@
-import Image from "next/image";
+'use client';
+
+import { useState } from 'react';
+import Header from '@/components/Header';
+import Hero from '@/components/Hero';
+import ModuleCard from '@/components/ModuleCard';
+import ProjectCard from '@/components/ProjectCard';
+import { courseModules, projects } from '@/data/courseData';
+import { Project } from '@/types';
 
 export default function Home() {
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <div className="min-h-screen flex flex-col">
+      <Header />
+
+      <main className="flex-1">
+        <Hero />
+
+        <section id="modules" className="py-20">
+          <div className="container mx-auto px-4">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl md:text-4xl font-bold mb-4">Course Modules</h2>
+              <p className="text-lg text-[var(--foreground)]/70 max-w-2xl mx-auto">
+                Master Python step by step with our comprehensive curriculum covering everything from basics to advanced concepts.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {courseModules.map((module) => (
+                <ModuleCard key={module.id} module={module} />
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section id="projects" className="py-20 bg-[var(--card-bg)]">
+          <div className="container mx-auto px-4">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl md:text-4xl font-bold mb-4">Hands-On Projects</h2>
+              <p className="text-lg text-[var(--foreground)]/70 max-w-2xl mx-auto">
+                Apply your knowledge with real-world projects. Build applications, games, and tools to solidify your Python skills.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {projects.map((project) => (
+                <ProjectCard
+                  key={project.id}
+                  project={project}
+                  onClick={() => setSelectedProject(project)}
+                />
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section id="about" className="py-20">
+          <div className="container mx-auto px-4">
+            <div className="max-w-4xl mx-auto">
+              <div className="text-center mb-12">
+                <h2 className="text-3xl md:text-4xl font-bold mb-4">Why Learn Python?</h2>
+                <p className="text-lg text-[var(--foreground)]/70">
+                  Python is one of the most popular and versatile programming languages in the world.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="p-6 rounded-xl border border-[var(--border)] bg-[var(--card-bg)]">
+                  <h3 className="text-xl font-semibold mb-3 text-[var(--primary)]">Easy to Learn</h3>
+                  <p className="text-[var(--foreground)]/70">
+                    Python's simple syntax makes it perfect for beginners. You can focus on learning programming concepts rather than complex syntax.
+                  </p>
+                </div>
+
+                <div className="p-6 rounded-xl border border-[var(--border)] bg-[var(--card-bg)]">
+                  <h3 className="text-xl font-semibold mb-3 text-[var(--secondary)]">Versatile</h3>
+                  <p className="text-[var(--foreground)]/70">
+                    From web development to data science, AI to automation - Python can do it all. It's used by tech giants worldwide.
+                  </p>
+                </div>
+
+                <div className="p-6 rounded-xl border border-[var(--border)] bg-[var(--card-bg)]">
+                  <h3 className="text-xl font-semibold mb-3 text-[var(--accent)]">High Demand</h3>
+                  <p className="text-[var(--foreground)]/70">
+                    Python developers are in high demand. Master Python and open doors to exciting career opportunities.
+                  </p>
+                </div>
+
+                <div className="p-6 rounded-xl border border-[var(--border)] bg-[var(--card-bg)]">
+                  <h3 className="text-xl font-semibold mb-3 text-[var(--primary)]">Large Community</h3>
+                  <p className="text-[var(--foreground)]/70">
+                    Join millions of Python developers. Access thousands of libraries, frameworks, and community support.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer className="py-8 border-t border-[var(--border)] bg-[var(--card-bg)]">
+        <div className="container mx-auto px-4 text-center">
+          <p className="text-sm text-[var(--foreground)]/60">
+            © 2024 Python LMS. Built with Next.js, TypeScript, and Tailwind CSS.
           </p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+      </footer>
+
+      {/* Project Detail Modal */}
+      {selectedProject && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50"
+          onClick={() => setSelectedProject(null)}
+        >
+          <div
+            className="max-w-4xl w-full max-h-[90vh] overflow-y-auto rounded-xl bg-[var(--background)] p-8"
+            onClick={(e) => e.stopPropagation()}
           >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-2xl font-bold">{selectedProject.title}</h2>
+              <button
+                onClick={() => setSelectedProject(null)}
+                className="p-2 rounded-lg hover:bg-[var(--card-bg)] transition-colors"
+              >
+                ✕
+              </button>
+            </div>
+
+            <div className="mb-4">
+              <span className="px-3 py-1 rounded-full text-sm bg-[var(--secondary)]/10 text-[var(--secondary)]">
+                {selectedProject.difficulty}
+              </span>
+            </div>
+
+            <p className="text-[var(--foreground)]/70 mb-6">{selectedProject.description}</p>
+
+            <div className="mb-6">
+              <h3 className="font-semibold mb-3">Features</h3>
+              <div className="flex flex-wrap gap-2">
+                {selectedProject.features.map((feature, index) => (
+                  <span
+                    key={index}
+                    className="px-3 py-1 rounded-md bg-[var(--card-bg)] text-sm border border-[var(--border)]"
+                  >
+                    {feature}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <h3 className="font-semibold mb-3">Code Preview</h3>
+              <pre className="p-4 rounded-lg bg-[var(--card-bg)] border border-[var(--border)] overflow-x-auto text-sm">
+                <code>{selectedProject.codePreview}</code>
+              </pre>
+            </div>
+          </div>
         </div>
-      </main>
+      )}
     </div>
   );
 }

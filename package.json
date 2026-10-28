@@ -11,15 +11,21 @@
   "dependencies": {
     "@monaco-editor/react": "^4.7.0",
     "@types/react-syntax-highlighter": "^15.5.13",
+    "bcryptjs": "^3.0.3",
+    "better-sqlite3": "^13.0.3",
     "framer-motion": "^14.7.1",
     "lucide-react": "^1.63.0",
     "next": "16.4.3",
+    "next-auth": "^4.24.15",
     "react": "19.3.0",
     "react-dom": "19.3.0",
-    "react-syntax-highlighter": "^16.1.2"
+    "react-syntax-highlighter": "^16.1.2",
+    "zod": "^4.6.7"
   },
   "devDependencies": {
     "@tailwindcss/turbopack": "^4",
+    "@types/bcryptjs": "^2.4.6",
+    "@types/better-sqlite3": "^9.6.0",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",

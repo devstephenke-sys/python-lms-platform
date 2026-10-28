@@ -5,15 +5,50 @@ import Header from '@/components/Header';
 import Hero from '@/components/Hero';
 import ModuleCard from '@/components/ModuleCard';
 import ProjectCard from '@/components/ProjectCard';
+import Pagination from '@/components/Pagination';
+import Auth from '@/components/Auth';
 import { courseModules, projects } from '@/data/courseData';
 import { Project } from '@/types';
 
+const ITEMS_PER_PAGE = 6;
+
 export default function Home() {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const [currentModulePage, setCurrentModulePage] = useState(1);
+  const [currentProjectPage, setCurrentProjectPage] = useState(1);
+  const [user, setUser] = useState<any>(null);
+  const [showAuth, setShowAuth] = useState(false);
+
+  const totalModulePages = Math.ceil(courseModules.length / ITEMS_PER_PAGE);
+  const totalProjectPages = Math.ceil(projects.length / ITEMS_PER_PAGE);
+
+  const currentModules = courseModules.slice(
+    (currentModulePage - 1) * ITEMS_PER_PAGE,
+    currentModulePage * ITEMS_PER_PAGE
+  );
+
+  const currentProjects = projects.slice(
+    (currentProjectPage - 1) * ITEMS_PER_PAGE,
+    currentProjectPage * ITEMS_PER_PAGE
+  );
+
+  const handleLoginClick = () => setShowAuth(true);
+
+  const handleLogout = () => {
+    setUser(null);
+  };
+
+  const handleAuthSuccess = (authenticatedUser: any) => {
+    setUser(authenticatedUser);
+  };
 
   return (
     <div className="min-h-screen flex flex-col">
-      <Header />
+      <Header
+        user={user}
+        onLoginClick={handleLoginClick}
+        onLogout={handleLogout}
+      />
 
       <main className="flex-1">
         <Hero />
@@ -28,10 +63,18 @@ export default function Home() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {courseModules.map((module) => (
+              {currentModules.map((module) => (
                 <ModuleCard key={module.id} module={module} />
               ))}
             </div>
+
+            {totalModulePages > 1 && (
+              <Pagination
+                currentPage={currentModulePage}
+                totalPages={totalModulePages}
+                onPageChange={setCurrentModulePage}
+              />
+            )}
           </div>
         </section>
 
@@ -45,7 +88,7 @@ export default function Home() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {projects.map((project) => (
+              {currentProjects.map((project) => (
                 <ProjectCard
                   key={project.id}
                   project={project}
@@ -53,6 +96,14 @@ export default function Home() {
                 />
               ))}
             </div>
+
+            {totalProjectPages > 1 && (
+              <Pagination
+                currentPage={currentProjectPage}
+                totalPages={totalProjectPages}
+                onPageChange={setCurrentProjectPage}
+              />
+            )}
           </div>
         </section>
 
@@ -107,6 +158,11 @@ export default function Home() {
           </p>
         </div>
       </footer>
+
+      {/* Auth Modal */}
+      {showAuth && (
+        <Auth onClose={() => setShowAuth(false)} onSuccess={handleAuthSuccess} />
+      )}
 
       {/* Project Detail Modal */}
       {selectedProject && (

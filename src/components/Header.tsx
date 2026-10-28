@@ -1,9 +1,15 @@
 'use client';
 
 import { useState } from 'react';
-import { Moon, Sun, Menu, X, BookOpen } from 'lucide-react';
+import { Moon, Sun, Menu, X, BookOpen, LogIn, User, LogOut } from 'lucide-react';
 
-export default function Header() {
+interface HeaderProps {
+  user: any;
+  onLoginClick: () => void;
+  onLogout: () => void;
+}
+
+export default function Header({ user, onLoginClick, onLogout }: HeaderProps) {
   const [darkMode, setDarkMode] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -34,6 +40,30 @@ export default function Header() {
           </nav>
 
           <div className="flex items-center gap-4">
+            {user ? (
+              <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2">
+                  <User className="h-5 w-5 text-[var(--primary)]" />
+                  <span className="text-sm font-medium">{user.name}</span>
+                </div>
+                <button
+                  onClick={onLogout}
+                  className="p-2 rounded-lg hover:bg-[var(--card-bg)] transition-colors"
+                  aria-label="Logout"
+                >
+                  <LogOut className="h-5 w-5" />
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={onLoginClick}
+                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[var(--primary)] text-white text-sm font-medium hover:bg-[var(--primary-dark)] transition-colors"
+              >
+                <LogIn className="h-4 w-4" />
+                Sign In
+              </button>
+            )}
+
             <button
               onClick={toggleDarkMode}
               className="p-2 rounded-lg hover:bg-[var(--card-bg)] transition-colors"

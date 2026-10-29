@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion';
 import { Project } from '@/types';
 import * as Icons from 'lucide-react';
+import { LucideIcon } from 'lucide-react';
 
 interface ProjectCardProps {
   project: Project;
@@ -10,9 +11,9 @@ interface ProjectCardProps {
 }
 
 export default function ProjectCard({ project, onClick }: ProjectCardProps) {
-  const Icon = Icons[project.icon as keyof typeof Icons] || Icons.Code;
+  const Icon = (Icons[project.icon as keyof typeof Icons] as LucideIcon) || Icons.Code;
 
-  const difficultyColors = {
+  const difficultyColors: Record<string, string> = {
     Beginner: 'bg-green-500/10 text-green-500',
     Intermediate: 'bg-yellow-500/10 text-yellow-500',
     Advanced: 'bg-red-500/10 text-red-500',

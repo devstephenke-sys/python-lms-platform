@@ -6,6 +6,7 @@ import Header from '@/components/Header';
 import CodeEditor from '@/components/CodeEditor';
 import QuizComponent from '@/components/Quiz';
 import VideoPlayer from '@/components/VideoPlayer';
+import ExecutionHistory from '@/components/ExecutionHistory';
 import { courseModules } from '@/data/courseData';
 import { quizData } from '@/data/quizData';
 import { Topic } from '@/types';
@@ -69,7 +70,7 @@ export default function LessonPage() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <Header />
+      <Header user={null} onLoginClick={() => {}} onLogout={() => {}} />
 
       <main className="flex-1">
         <div className="container mx-auto px-4 py-8">
@@ -209,8 +210,16 @@ export default function LessonPage() {
               {/* Code Editor */}
               <div>
                 <h2 className="text-lg font-semibold mb-4">Interactive Code</h2>
-                <CodeEditor code={currentTopic.code} readOnly={false} height="400px" />
+                <CodeEditor
+                  code={currentTopic.code}
+                  readOnly={false}
+                  height="400px"
+                  topicId={currentTopic.id}
+                />
               </div>
+
+              {/* Execution History */}
+              <ExecutionHistory topicId={currentTopic.id} limit={5} />
 
               {/* Quiz Section */}
               {topicQuiz && (

@@ -64,6 +64,22 @@ export function initializeDatabase() {
     )
   `);
 
+  // Code execution attempts table
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS code_executions (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      user_id INTEGER,
+      topic_id TEXT NOT NULL,
+      code TEXT NOT NULL,
+      output TEXT,
+      error TEXT,
+      execution_time_ms INTEGER,
+      success BOOLEAN DEFAULT 0,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
+    )
+  `);
+
   console.log('Database initialized successfully');
 }
 

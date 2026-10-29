@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { BookOpen, Trophy, Target, Clock, CheckCircle, Circle } from 'lucide-react';
 import { courseModules } from '@/data/courseData';
+import CodeExecutionStats from '@/components/CodeExecutionStats';
 
 interface DashboardProps {
   user: any;
@@ -86,6 +87,9 @@ export default function Dashboard({ user }: DashboardProps) {
             <div className="text-2xl font-bold">{overallProgress.toFixed(0)}%</div>
           </div>
         </div>
+
+        {/* Code Execution Stats */}
+        <CodeExecutionStats userId={user?.id} />
 
         {/* Module Progress */}
         <div className="space-y-6">

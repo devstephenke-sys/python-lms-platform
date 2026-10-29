@@ -2,28 +2,67 @@
 
 import { useState } from 'react';
 import Editor from '@monaco-editor/react';
-import { Play, Copy, Check, X } from 'lucide-react';
+import { Play, Copy, Check, X, Terminal, Clock, AlertCircle } from 'lucide-react';
 
 interface CodeEditorProps {
   code: string;
   language?: string;
   readOnly?: boolean;
   height?: string;
+  topicId?: string;
+  userId?: number;
 }
 
-export default function CodeEditor({ code, language = 'python', readOnly = false, height = '400px' }: CodeEditorProps) {
+interface ExecutionResult {
+  output: string;
+  error: string | null;
+  executionTime: number;
+  success: boolean;
+}
+
+export default function CodeEditor({ code, language = 'python', readOnly = false, height = '400px', topicId, userId }: CodeEditorProps) {
   const [editorCode, setEditorCode] = useState(code);
   const [output, setOutput] = useState('');
+  const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
   const [isRunning, setIsRunning] = useState(false);
+  const [executionTime, setExecutionTime] = useState<number | null>(null);
 
-  const handleRun = () => {
+  const handleRun = async () => {
     setIsRunning(true);
-    setOutput('Running Python code...\n\nNote: This is a frontend demo. In production, this would connect to a Python backend to execute code.\n\nTo run Python code locally:\n1. Install Python from python.org\n2. Save the code to a .py file\n3. Run: python filename.py');
+    setOutput('');
+    setError(null);
+    setExecutionTime(null);
 
-    setTimeout(() => {
+    try {
+      const response = await fetch('/api/code/execute', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          code: editorCode,
+          topicId,
+          userId,
+        }),
+      });
+
+      const result: ExecutionResult = await response.json();
+
+      if (result.success) {
+        setOutput(result.output);
+      } else {
+        setError(result.error || 'Execution failed');
+        setOutput(result.output);
+      }
+
+      setExecutionTime(result.executionTime);
+    } catch (err) {
+      setError('Failed to execute code. Please try again.');
+      console.error('Execution error:', err);
+    } finally {
       setIsRunning(false);
-    }, 1000);
+    }
   };
 
   const handleCopy = async () => {
@@ -94,13 +133,30 @@ export default function CodeEditor({ code, language = 'python', readOnly = false
         }}
       />
 
-      {output && (
+      {(output || error) && (
         <div className="border-t border-[var(--border)] bg-[var(--background)]">
-          <div className="px-4 py-2 border-b border-[var(--border)]">
-            <span className="text-sm font-medium text-[var(--foreground)]/60">Output</span>
+          <div className="px-4 py-2 border-b border-[var(--border)] flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Terminal className="h-4 w-4 text-[var(--foreground)]/60" />
+              <span className="text-sm font-medium text-[var(--foreground)]/60">Output</span>
+              {error && (
+                <span className="flex items-center gap-1 text-xs text-red-500">
+                  <AlertCircle className="h-3 w-3" />
+                  Error
+                </span>
+              )}
+            </div>
+            {executionTime !== null && (
+              <div className="flex items-center gap-1 text-xs text-[var(--foreground)]/60">
+                <Clock className="h-3 w-3" />
+                {executionTime}ms
+              </div>
+            )}
           </div>
-          <pre className="p-4 text-sm font-mono text-[var(--foreground)] whitespace-pre-wrap overflow-auto max-h-48">
-            {output}
+          <pre className={`p-4 text-sm font-mono whitespace-pre-wrap overflow-auto max-h-48 ${
+            error ? 'text-red-500' : 'text-[var(--foreground)]'
+          }`}>
+            {error || output}
           </pre>
         </div>
       )}

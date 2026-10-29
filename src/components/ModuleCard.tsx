@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import { Module } from '@/types';
 import * as Icons from 'lucide-react';
+import { LucideIcon } from 'lucide-react';
 
 interface ModuleCardProps {
   module: Module;
@@ -11,7 +12,7 @@ interface ModuleCardProps {
 
 export default function ModuleCard({ module }: ModuleCardProps) {
   const router = useRouter();
-  const Icon = Icons[module.icon as keyof typeof Icons] || Icons.Book;
+  const Icon = (Icons[module.icon as keyof typeof Icons] as LucideIcon) || Icons.Book;
 
   const handleClick = () => {
     router.push(`/lesson/${module.id}`);

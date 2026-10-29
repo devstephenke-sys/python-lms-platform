@@ -24,7 +24,7 @@ export interface Project {
   id: string;
   title: string;
   description: string;
-  difficulty: 'Beginner' | 'Intermediate' | 'Advanced';
+  difficulty: string;
   icon: string;
   path: string;
   language: string;

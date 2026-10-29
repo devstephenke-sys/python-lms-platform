@@ -25,7 +25,8 @@ print('Welcome to Python!')
 # Multiple prints
 name = 'Python Learner'
 print(f'Hello, {name}!')`,
-        order: 1
+        order: 1,
+        videoUrl: 'https://www.youtube.com/watch?v=rfscVS0vtbw'
       },
       {
         id: 'installation-setup',
@@ -42,7 +43,8 @@ print(f'Platform: {platform.system()}')
 
 # Basic environment check
 print('\nEnvironment Setup Complete!')`,
-        order: 2
+        order: 2,
+        videoUrl: 'https://www.youtube.com/watch?v=cQT33yu9pY8'
       }
     ]
   },
@@ -75,7 +77,8 @@ name = "Alice"  # string
 is_active = True  # boolean
 
 print(f"Name: {name}, Age: {age}")`,
-        order: 1
+        order: 1,
+        videoUrl: 'https://www.youtube.com/watch?v=c33pZq9Zp1M'
       },
       {
         id: 'variable-names',
@@ -267,7 +270,8 @@ else:
     grade = 'F'
 
 print(f"Grade: {grade}")`,
-        order: 1
+        order: 1,
+        videoUrl: 'https://www.youtube.com/watch?v=Zp5MuPOtsSY'
       },
       {
         id: 'for-loops',
@@ -381,7 +385,8 @@ def get_coordinates():
 
 x, y = get_coordinates()
 print(f"Coordinates: ({x}, {y})")`,
-        order: 1
+        order: 1,
+        videoUrl: 'https://www.youtube.com/watch?v=9Os0o3wzS_I'
       },
       {
         id: 'function-arguments',

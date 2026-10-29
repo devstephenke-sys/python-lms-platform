@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { Instructor } from '@/types';
-import { Linkedin, Github, Twitter, Award, Briefcase, GraduationCap } from 'lucide-react';
+import { Linkedin, GitHub, Twitter, Award, Briefcase, GraduationCap } from 'lucide-react';
 
 interface InstructorProfileProps {
   instructor: Instructor;
@@ -67,7 +67,7 @@ export default function InstructorProfile({ instructor }: InstructorProfileProps
                 rel="noopener noreferrer"
                 className="p-2 rounded-lg bg-[var(--card-bg)] hover:bg-[var(--primary)]/10 transition-colors"
               >
-                <Github className="h-5 w-5 text-[var(--foreground)]/60 hover:text-[var(--primary)]" />
+                <GitHub className="h-5 w-5 text-[var(--foreground)]/60 hover:text-[var(--primary)]" />
               </a>
             )}
             {instructor.socialLinks.twitter && (

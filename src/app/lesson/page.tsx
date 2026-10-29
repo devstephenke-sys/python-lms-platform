@@ -5,10 +5,11 @@ import { useParams, useRouter } from 'next/navigation';
 import Header from '@/components/Header';
 import CodeEditor from '@/components/CodeEditor';
 import QuizComponent from '@/components/Quiz';
+import VideoPlayer from '@/components/VideoPlayer';
 import { courseModules } from '@/data/courseData';
 import { quizData } from '@/data/quizData';
 import { Topic } from '@/types';
-import { ChevronLeft, ChevronRight, CheckCircle, Circle, BookOpen, Lightbulb, Globe } from 'lucide-react';
+import { ChevronLeft, ChevronRight, CheckCircle, Circle, BookOpen, Lightbulb, Globe, PlayCircle } from 'lucide-react';
 
 export default function LessonPage() {
   const params = useParams();
@@ -193,6 +194,17 @@ export default function LessonPage() {
                   {currentTopic.realWorld}
                 </p>
               </div>
+
+              {/* Video Player */}
+              {currentTopic.videoUrl && (
+                <div>
+                  <div className="flex items-center gap-2 mb-4">
+                    <PlayCircle className="h-5 w-5 text-[var(--primary)]" />
+                    <h2 className="text-lg font-semibold">Video Lesson</h2>
+                  </div>
+                  <VideoPlayer url={currentTopic.videoUrl} title={currentTopic.title} />
+                </div>
+              )}
 
               {/* Code Editor */}
               <div>

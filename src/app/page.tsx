@@ -18,7 +18,6 @@ export default function Home() {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [currentModulePage, setCurrentModulePage] = useState(1);
   const [currentProjectPage, setCurrentProjectPage] = useState(1);
-  const [user, setUser] = useState<any>(null);
   const [showAuth, setShowAuth] = useState(false);
 
   const totalModulePages = Math.ceil(courseModules.length / ITEMS_PER_PAGE);
@@ -36,21 +35,9 @@ export default function Home() {
 
   const handleLoginClick = () => setShowAuth(true);
 
-  const handleLogout = () => {
-    setUser(null);
-  };
-
-  const handleAuthSuccess = (authenticatedUser: any) => {
-    setUser(authenticatedUser);
-  };
-
   return (
     <div className="min-h-screen flex flex-col">
-      <Header
-        user={user}
-        onLoginClick={handleLoginClick}
-        onLogout={handleLogout}
-      />
+      <Header onLoginClick={handleLoginClick} />
 
       <main className="flex-1">
         <Hero />
@@ -181,7 +168,7 @@ export default function Home() {
 
       {/* Auth Modal */}
       {showAuth && (
-        <Auth onClose={() => setShowAuth(false)} onSuccess={handleAuthSuccess} />
+        <Auth onClose={() => setShowAuth(false)} />
       )}
 
       {/* Project Detail Modal */}

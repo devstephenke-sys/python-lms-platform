@@ -1,48 +1,90 @@
-import db from './schema';
+import { prisma } from '../prisma';
 import bcrypt from 'bcryptjs';
 
 export interface User {
   id: number;
   email: string;
   name: string;
-  role: 'student' | 'instructor' | 'admin';
-  created_at: string;
+  role: string;
+  createdAt: Date;
 }
 
 export interface CreateUserInput {
   email: string;
   password: string;
   name: string;
-  role?: 'student' | 'instructor' | 'admin';
+  role?: string;
 }
 
 export async function createUser(input: CreateUserInput): Promise<User> {
   const hashedPassword = await bcrypt.hash(input.password, 10);
 
-  const stmt = db.prepare(`
-    INSERT INTO users (email, password, name, role)
-    VALUES (?, ?, ?, ?)
-  `);
+  const user = await prisma.user.create({
+    data: {
+      email: input.email,
+      password: hashedPassword,
+      name: input.name,
+      role: input.role || 'student',
+    },
+    select: {
+      id: true,
+      email: true,
+      name: true,
+      role: true,
+      createdAt: true,
+    },
+  });
 
-  const result = stmt.run(input.email, hashedPassword, input.name, input.role || 'student');
-
-  const user = db.prepare('SELECT id, email, name, role, created_at FROM users WHERE id = ?').get(result.lastInsertRowid) as User;
-
-  return user;
+  return {
+    ...user,
+    role: user.role as 'student' | 'instructor' | 'admin',
+  };
 }
 
 export async function getUserByEmail(email: string): Promise<User | null> {
-  const user = db.prepare('SELECT id, email, name, role, created_at FROM users WHERE email = ?').get(email) as User | undefined;
-  return user || null;
+  const user = await prisma.user.findUnique({
+    where: { email },
+    select: {
+      id: true,
+      email: true,
+      name: true,
+      role: true,
+      createdAt: true,
+    },
+  });
+
+  if (!user) return null;
+
+  return {
+    ...user,
+    role: user.role as 'student' | 'instructor' | 'admin',
+  };
 }
 
 export async function getUserById(id: number): Promise<User | null> {
-  const user = db.prepare('SELECT id, email, name, role, created_at FROM users WHERE id = ?').get(id) as User | undefined;
-  return user || null;
+  const user = await prisma.user.findUnique({
+    where: { id },
+    select: {
+      id: true,
+      email: true,
+      name: true,
+      role: true,
+      createdAt: true,
+    },
+  });
+
+  if (!user) return null;
+
+  return {
+    ...user,
+    role: user.role as 'student' | 'instructor' | 'admin',
+  };
 }
 
 export async function verifyPassword(email: string, password: string): Promise<User | null> {
-  const user = db.prepare('SELECT id, email, password, name, role, created_at FROM users WHERE email = ?').get(email) as any;
+  const user = await prisma.user.findUnique({
+    where: { email },
+  });
 
   if (!user) {
     return null;

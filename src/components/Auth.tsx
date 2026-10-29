@@ -1,14 +1,15 @@
 'use client';
 
 import { useState } from 'react';
+import { useAuth } from '@/components/Providers';
 import { X, Mail, Lock, User } from 'lucide-react';
 
 interface AuthProps {
   onClose: () => void;
-  onSuccess: (user: any) => void;
 }
 
-export default function Auth({ onClose, onSuccess }: AuthProps) {
+export default function Auth({ onClose }: AuthProps) {
+  const { login } = useAuth();
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -22,25 +23,40 @@ export default function Auth({ onClose, onSuccess }: AuthProps) {
     setError('');
 
     try {
-      const endpoint = isLogin ? '/api/auth/login' : '/api/auth/register';
-      const body = isLogin
-        ? { email, password }
-        : { email, password, name };
+      if (isLogin) {
+        // Login with custom API
+        const response = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password }),
+        });
 
-      const response = await fetch(endpoint, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body),
-      });
+        const data = await response.json();
 
-      const data = await response.json();
+        if (!response.ok) {
+          throw new Error(data.error || 'Login failed');
+        }
 
-      if (!response.ok) {
-        throw new Error(data.error || 'Authentication failed');
+        login(data.user);
+        onClose();
+      } else {
+        // Register with custom API
+        const response = await fetch('/api/auth/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password, name }),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || 'Registration failed');
+        }
+
+        // Auto-login after registration
+        login(data.user);
+        onClose();
       }
-
-      onSuccess(data.user);
-      onClose();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {

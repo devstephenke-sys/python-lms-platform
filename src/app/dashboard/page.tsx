@@ -1,34 +1,40 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 import { BookOpen, Trophy, Target, Clock, CheckCircle, Circle } from 'lucide-react';
 import { courseModules } from '@/data/courseData';
 import CodeExecutionStats from '@/components/CodeExecutionStats';
 
-interface DashboardProps {
-  user: any;
-}
-
-export default function Dashboard({ user }: DashboardProps) {
+export default function Dashboard() {
+  const { data: session, status } = useSession();
+  const router = useRouter();
   const [progress, setProgress] = useState<Record<string, number>>({});
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Simulate fetching progress
-    const fetchProgress = async () => {
-      try {
-        // In production, fetch from API
-        // const response = await fetch(`/api/progress?userId=${user.id}`);
-        // const data = await response.json();
-        setLoading(false);
-      } catch (error) {
-        console.error('Error fetching progress:', error);
-        setLoading(false);
-      }
-    };
+    if (status === 'unauthenticated') {
+      router.push('/');
+    } else if (status === 'authenticated') {
+      setLoading(false);
+    }
+  }, [status, router]);
 
-    fetchProgress();
-  }, [user]);
+  if (status === 'loading' || loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[var(--primary)] mx-auto mb-4"></div>
+          <p>Loading dashboard...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!session) {
+    return null;
+  }
 
   const totalLessons = courseModules.reduce((acc, module) => acc + module.topics.length, 0);
   const completedLessons = Object.values(progress).reduce((acc, val) => acc + val, 0);
@@ -49,7 +55,7 @@ export default function Dashboard({ user }: DashboardProps) {
     <div className="min-h-screen flex flex-col">
       <div className="container mx-auto px-4 py-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">Welcome back, {user.name}!</h1>
+          <h1 className="text-3xl font-bold mb-2">Welcome back, {session.user?.name}!</h1>
           <p className="text-[var(--foreground)]/70">Continue your Python learning journey</p>
         </div>
 
@@ -89,7 +95,7 @@ export default function Dashboard({ user }: DashboardProps) {
         </div>
 
         {/* Code Execution Stats */}
-        <CodeExecutionStats userId={user?.id} />
+        <CodeExecutionStats userId={session.user?.id ? parseInt(session.user.id) : undefined} />
 
         {/* Module Progress */}
         <div className="space-y-6">

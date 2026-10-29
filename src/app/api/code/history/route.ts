@@ -1,10 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getCodeExecutionsByTopic, getExecutionStats } from '@/lib/db/codeExecution';
-import { initDb } from '@/lib/db/init-server';
 import { z } from 'zod';
-
-// Initialize database
-initDb();
 
 const historySchema = z.object({
   topicId: z.string(),
@@ -13,7 +9,7 @@ const historySchema = z.object({
 
 export async function GET(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url);
+    const { searchParams } = request.nextUrl;
     const topicId = searchParams.get('topicId');
     const limit = parseInt(searchParams.get('limit') || '10');
 

@@ -1,21 +1,25 @@
 'use client';
 
 import { useState } from 'react';
+import { useAuth } from '@/components/Providers';
 import { Moon, Sun, Menu, X, BookOpen, LogIn, User, LogOut } from 'lucide-react';
 
 interface HeaderProps {
-  user: any;
   onLoginClick: () => void;
-  onLogout: () => void;
 }
 
-export default function Header({ user, onLoginClick, onLogout }: HeaderProps) {
+export default function Header({ onLoginClick }: HeaderProps) {
+  const { user, logout } = useAuth();
   const [darkMode, setDarkMode] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
     document.documentElement.classList.toggle('dark');
+  };
+
+  const handleLogout = () => {
+    logout();
   };
 
   return (
@@ -50,7 +54,7 @@ export default function Header({ user, onLoginClick, onLogout }: HeaderProps) {
                   <span className="text-sm font-medium">{user.name}</span>
                 </div>
                 <button
-                  onClick={onLogout}
+                  onClick={handleLogout}
                   className="p-2 rounded-lg hover:bg-[var(--card-bg)] transition-colors"
                   aria-label="Logout"
                 >

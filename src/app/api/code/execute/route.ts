@@ -1,11 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { spawn } from 'child_process';
-import { initDb } from '@/lib/db/init-server';
 import { createCodeExecution } from '@/lib/db/codeExecution';
 import { z } from 'zod';
-
-// Initialize database
-initDb();
 
 const executeSchema = z.object({
   code: z.string().max(10000),
@@ -185,13 +181,13 @@ export async function POST(request: NextRequest) {
     if (topicId) {
       try {
         await createCodeExecution({
-          user_id: userId,
-          topic_id: topicId,
+          userId,
+          topicId,
           code,
           output: result.output,
           error: result.error || undefined,
-          execution_time_ms: result.executionTime,
-          success: result.success
+          executionTimeMs: result.executionTime,
+          success: result.success,
         });
       } catch (dbError) {
         console.error('Failed to log code execution:', dbError);

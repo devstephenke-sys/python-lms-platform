@@ -1,10 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createUser, getUserByEmail } from '@/lib/db/users';
-import { initDb } from '@/lib/db/init-server';
 import { z } from 'zod';
-
-// Initialize database
-initDb();
 
 const registerSchema = z.object({
   email: z.string().email(),
@@ -43,7 +39,7 @@ export async function POST(request: NextRequest) {
 
     console.error('Registration error:', error);
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { error: 'Internal server error. Please try again.' },
       { status: 500 }
     );
   }

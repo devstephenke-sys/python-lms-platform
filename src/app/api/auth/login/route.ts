@@ -1,10 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { verifyPassword } from '@/lib/db/users';
-import { initDb } from '@/lib/db/init-server';
 import { z } from 'zod';
-
-// Initialize database
-initDb();
 
 const loginSchema = z.object({
   email: z.string().email(),
@@ -26,8 +22,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // In production, you would set a session cookie or JWT here
-    // For now, we'll return the user data
     return NextResponse.json(
       { message: 'Login successful', user },
       { status: 200 }
@@ -42,7 +36,7 @@ export async function POST(request: NextRequest) {
 
     console.error('Login error:', error);
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { error: 'Internal server error. Please try again.' },
       { status: 500 }
     );
   }
